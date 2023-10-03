@@ -7,6 +7,8 @@ updatedAt:
 
 import { ContentsContainer } from '@/components/specific/ContentsContainer';
 import { ContentsItemCard } from '@/components/specific/ContentsItemCard';
+import { Batch } from '@/components/ui/Batch';
+
 
 ## 使用している技術
 - Next13
@@ -48,45 +50,61 @@ import { ContentsItemCard } from '@/components/specific/ContentsItemCard';
 <ContentsContainer grid={2}>
 
 <ContentsItemCard level={3} title="コメント機能"  date="2023/9/28">
+  <Batch status="waiting" />
 - [Disqus](https://disqus.com/)
 - [Commentbox](https://commentbox.io/)
 </ContentsItemCard>
 
 <ContentsItemCard level={3} title="検索機能"  date="2023/9/28">
+  <Batch status="waiting" />
 - [Algolia](https://www.algolia.com/)
   - [React / Next.js に algoliaを導入して検索機能を追加しよう | fwywd（フュード）powered byキカガク](https://fwywd.com/tech/next-algoli)
 </ContentsItemCard>
 
 <ContentsItemCard level={3} title={`Chromaticを\ngithub actionで自動実行`}  date="2023/9/28">
+  <Batch status="waiting" />
 - [Chromaticでコミット毎にStorybookをデプロイしてコードレビューを効率化する](https://zenn.dev/keitakn/articles/storybook-deploy-to-chromatic)
 </ContentsItemCard>
 
 
 <ContentsItemCard level={3} title="いいね機能の実装"  date="2023/9/28">
+  <Batch status="waiting" />
 - [Next.jsとFirestoreを用いたmicroCMS記事の「いいね」機能の設計と実装](https://zenn.dev/chot/articles/47a4806ed719c2)
 </ContentsItemCard>
 
 <ContentsItemCard level={3} title="Vercel Analyticsの導入"  date="2023/9/28">
+  <Batch status="waiting" />
 - [Vercel Analytics](https://vercel.com/analytics)
 </ContentsItemCard>
 
 <ContentsItemCard level={3} title="リンクにブログカードを導入する"  date="2023/9/28">
+  <Batch status="waiting" />
 - [Next.js × microCMSで作ったブログにブログカードを作成してみた](https://zenn.dev/hirokikameda/articles/2ecf83446eec8f)
 </ContentsItemCard>
 
 <ContentsItemCard level={3} title={`コードエリアにコピー機能と\nファイル名表示機能を追加`}  date="2023/9/28">
+  <Batch status="waiting" />
 - [Next.jsのSyntax Highlighter部分にファイル名表示、コピーボタン機能を追加](https://itc-engineering-blog.netlify.app/blogs/nextjs-filename-copy)
 </ContentsItemCard>
 
-<ContentsItemCard level={3} title="mdxページ作成の簡易化"  date="2023/9/28" url="/log/mdx-page-simple">
+<ContentsItemCard level={3} title="mdxページ作成の簡易化"  date="2023/10/4" url="/log/mdx-page-simple">
+  <Batch status="success" />
 - mdxにlayout.tsxを用意する仕組みをmdxのみ作ればページが作れるような仕組みの検討
 
 </ContentsItemCard>
 
+<ContentsItemCard level={3} title="mdxページのsubmodule化"  date="2023/10/4" url="/log/mdx-page-submodule">
+  <Batch status="success" />
+- mdxのsubmoduleにして、ブログコンテンツを別リポジトリに分ける
+
+</ContentsItemCard>
+
 <ContentsItemCard level={3} title="mdxページに目次をつける"  date="2023/9/28">
+  <Batch status="waiting" />
 </ContentsItemCard>
 
 <ContentsItemCard level={3} title="SNS共有リンクの追加"  date="2023/9/28">
+  <Batch status="waiting" />
 </ContentsItemCard>
 
 </ContentsContainer>
