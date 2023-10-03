@@ -1,0 +1,16 @@
+---
+title: mdxページのsubmodule化
+description: mdxのsubmoduleにして、ブログコンテンツを別リポジトリに分ける
+publishedAt: 2023-10-04
+updatedAt: 
+---
+
+## .gitmodulesを追加
+
+sshでurlを指定しているとvercelでcloneできないので、httpsで指定するように
+
+```
+[submodule "src/log"]
+	path = src/log
+	url = https://github.com/kamem/kame.blog.log.git
+```
