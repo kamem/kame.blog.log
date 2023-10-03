@@ -1,0 +1,72 @@
+---
+title: mdxページ作成の簡易化
+description: mdxにlayout.tsxを用意する仕組みをmdxのみ作ればページが作れるような仕組みの検討。mdxページ作成の簡易化するための試行錯誤
+publishedAt: 2023-10-01
+updatedAt: 
+---
+
+## 方法
+- [remark-frontmatter](https://github.com/remarkjs/remark-frontmatter)
+- [remark-mdx-frontmatter](https://www.npmjs.com/package/remark-mdx-frontmatter)
+
+```
+import remarkFrontmatter from 'remark-frontmatter';
+import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
+
+/** @type {import('next').NextConfig} */
+const withMDX = nextMDX({
+  extension: /\.mdx$/,
+  options: {
+    remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+  },
+```
+
+### 使い方
+
+```
+const mdx = await import(`@/log/${params.post}.mdx`);
+const data = mdx.frontmatter;
+const default = mdx.default;
+
+return (<mdx.default />);
+```
+
+`npm run dev`では動くのだが、下記の問題点が発生。
+
+## mdx.defaultでエラーになる
+下記の`mdx.default`の形がserver側でエラーになる問題が解決できなかったため一旦`use client`と`dynamic`を使ってクライアント側で描画するようにしました。
+
+```
+const mdx = await import(`@/log/${params.post}.mdx`);
+return (<mdx.default />);
+```
+
+
+## dynamicを使用してクライアント側で描画するように
+
+```
+'use client';
+import React, { forwardRef } from 'react';
+import dynamic from 'next/dynamic';
+import { Loading } from '@/components/ui/Loading';
+
+type Props = {
+  id: string;
+  children?: React.ReactNode;
+};
+
+export const MdxContents = forwardRef<HTMLDivElement, Props>(
+  function MdxContents({ children, id, ...rest }: Props, ref) {
+    const DynamicComponentWithCustomLoading = dynamic(
+      () => import(`@/log/${id}.mdx`),
+      {
+        loading: () => <Loading layout />,
+      }
+    );
+
+    return <DynamicComponentWithCustomLoading />;
+  }
+);
+
+```
+`id`をpropsで渡して、コンポーネント内では`use client`で動かして、`dynamic`で`mdx`ファイルを取得する仕組みにしました。

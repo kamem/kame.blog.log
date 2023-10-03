@@ -1,0 +1,98 @@
+---
+title: 使用している技術と今後
+description: このブログで使用している技術と今後の予定について
+publishedAt: 2023-10-01
+updatedAt: 
+---
+
+import { ContentsContainer } from '@/components/specific/ContentsContainer';
+import { ContentsItemCard } from '@/components/specific/ContentsItemCard';
+
+## 使用している技術
+- Next13
+- Storybook
+  - [storybook - kame.blog](https://storybook.kame.blog/)
+- [Scaffdog](https://scaff.dog/)
+  - Componentを作る際に、でコマンドで必要なものを自動生成する機能
+- 記事ogpの自動生成機能
+- microCMSのapi取得に[aspida](https://blog.microcms.io/how-to-use-aspida/)を使用
+- [chromatic](https://www.chromatic.com/)
+
+## 使用しているCMS
+- [microCMS](https://microcms.io/)
+
+## サイトを作る上で必要なファイルの生成
+
+### 必要機能の自動生成
+
+- feed
+- sitemap.xml
+- robots.txt
+
+### 解析
+
+- Google Tag Manager
+
+### 広告
+
+- ads.txt
+
+## 作る際に意識したこと
+
+サイト固有の情報はなるべくenvなどで外側から渡す。
+もしくはconfigファイルでまとめるように
+
+## 検討中の機能
+
+
+<ContentsContainer grid={2}>
+
+<ContentsItemCard level={3} title="コメント機能"  date="2023/9/28">
+- [Disqus](https://disqus.com/)
+- [Commentbox](https://commentbox.io/)
+</ContentsItemCard>
+
+<ContentsItemCard level={3} title="検索機能"  date="2023/9/28">
+- [Algolia](https://www.algolia.com/)
+  - [React / Next.js に algoliaを導入して検索機能を追加しよう | fwywd（フュード）powered byキカガク](https://fwywd.com/tech/next-algoli)
+</ContentsItemCard>
+
+<ContentsItemCard level={3} title={`Chromaticを\ngithub actionで自動実行`}  date="2023/9/28">
+- [Chromaticでコミット毎にStorybookをデプロイしてコードレビューを効率化する](https://zenn.dev/keitakn/articles/storybook-deploy-to-chromatic)
+</ContentsItemCard>
+
+
+<ContentsItemCard level={3} title="いいね機能の実装"  date="2023/9/28">
+- [Next.jsとFirestoreを用いたmicroCMS記事の「いいね」機能の設計と実装](https://zenn.dev/chot/articles/47a4806ed719c2)
+</ContentsItemCard>
+
+<ContentsItemCard level={3} title="Vercel Analyticsの導入"  date="2023/9/28">
+- [Vercel Analytics](https://vercel.com/analytics)
+</ContentsItemCard>
+
+<ContentsItemCard level={3} title="リンクにブログカードを導入する"  date="2023/9/28">
+- [Next.js × microCMSで作ったブログにブログカードを作成してみた](https://zenn.dev/hirokikameda/articles/2ecf83446eec8f)
+</ContentsItemCard>
+
+<ContentsItemCard level={3} title={`コードエリアにコピー機能と\nファイル名表示機能を追加`}  date="2023/9/28">
+- [Next.jsのSyntax Highlighter部分にファイル名表示、コピーボタン機能を追加](https://itc-engineering-blog.netlify.app/blogs/nextjs-filename-copy)
+</ContentsItemCard>
+
+<ContentsItemCard level={3} title="mdxページ作成の簡易化"  date="2023/9/28" url="/log/mdx-page-simple">
+- mdxにlayout.tsxを用意する仕組みをmdxのみ作ればページが作れるような仕組みの検討
+
+</ContentsItemCard>
+
+<ContentsItemCard level={3} title="mdxページに目次をつける"  date="2023/9/28">
+</ContentsItemCard>
+
+<ContentsItemCard level={3} title="SNS共有リンクの追加"  date="2023/9/28">
+</ContentsItemCard>
+
+</ContentsContainer>
+
+## 今後やりたいこと
+
+- サイト固有の情報で外しきれていない部分に関して整理する
+  - 「サイトについて」「プロフィール」などのサイト固有のmdxファイルを置く場所を検討
+- その上で、誰でも使えるようなものとしてリポジトリを公開する
