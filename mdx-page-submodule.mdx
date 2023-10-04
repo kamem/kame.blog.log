@@ -14,3 +14,6 @@ sshでurlを指定しているとvercelでcloneできないので、httpsで指�
 	path = src/log
 	url = https://github.com/kamem/kame.blog.log.git
 ```
+
+## 注意点
+- submoduleをPushしても、deployが実行されないため、Github側でWebhooksを設定する
