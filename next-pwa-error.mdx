@@ -1,0 +1,52 @@
+---
+title: vercelのdeploy時に@ducanh2912/next-pwaでエラーになる
+description: ducanh2912/next-pwaの初回デプロイ時にエラーになる
+publishedAt: 2023-10-07
+updatedAt: 
+---
+
+## 現象
+- 初回デプロイ時にエラーになる。
+- ReDeploy時はエラーにならない。
+
+## エラー内容
+```
+ERROR in ./node_modules/@ducanh2912/next-pwa/dist/sw-entry-worker.js
+Module build failed (from ./node_modules/@ducanh2912/next-pwa/dist/swc-loader.cjs):
+Error: Bindings not found.
+    at Compiler.<anonymous> (/vercel/path0/node_modules/@swc/core/index.js:225:19)
+    at Generator.next (<anonymous>)
+    at /vercel/path0/node_modules/@swc/core/index.js:34:71
+    at new Promise (<anonymous>)
+    at __awaiter (/vercel/path0/node_modules/@swc/core/index.js:30:12)
+    at Compiler.transform (/vercel/path0/node_modules/@swc/core/index.js:202:16)
+    at Object.transform (/vercel/path0/node_modules/@swc/core/index.js:344:21)
+    at Object.H (/vercel/path0/node_modules/@ducanh2912/next-pwa/dist/swc-loader.cjs:1:9082)
+ERROR in swe-worker-c6d9e90ca0bb3f3e.js
+swe-worker-c6d9e90ca0bb3f3e.js from Terser plugin
+Bindings not found.
+Error: Bindings not found.
+    at Compiler.<anonymous> (/vercel/path0/node_modules/@swc/core/index.js:102:19)
+    at Generator.next (<anonymous>)
+    at /vercel/path0/node_modules/@swc/core/index.js:34:71
+    at new Promise (<anonymous>)
+    at __awaiter (/vercel/path0/node_modules/@swc/core/index.js:30:12)
+    at Compiler.minify (/vercel/path0/node_modules/@swc/core/index.js:95:16)
+    at Object.<anonymous> (/vercel/path0/node_modules/@swc/core/index.js:365:25)
+    at Generator.next (<anonymous>)
+    at /vercel/path0/node_modules/@swc/core/index.js:34:71
+    at new Promise (<anonymous>)
+webpack 5.88.2 compiled with 2 errors in 1909 ms
+unhandledRejection Error: Failed to build `next-pwa`'s worker due to webpack errors.
+    at file:///vercel/path0/node_modules/@ducanh2912/next-pwa/dist/index.module.js:2:8584
+    at finalCallback (/vercel/path0/node_modules/webpack/lib/Compiler.js:441:32)
+    at /vercel/path0/node_modules/webpack/lib/Compiler.js:458:13
+    at Hook.eval [as callAsync] (eval at create (/vercel/path0/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:15:1)
+    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (/vercel/path0/node_modules/tapable/lib/Hook.js:18:14)
+    at onCompiled (/vercel/path0/node_modules/webpack/lib/Compiler.js:456:21)
+    at /vercel/path0/node_modules/webpack/lib/Compiler.js:1200:17
+    at Hook.eval [as callAsync] (eval at create (/vercel/path0/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (/vercel/path0/node_modules/tapable/lib/Hook.js:18:14)
+    at /vercel/path0/node_modules/webpack/lib/Compiler.js:1196:33
+Error: Command "npm run build" exited with 1
+```
