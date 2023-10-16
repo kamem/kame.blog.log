@@ -1,0 +1,166 @@
+---
+title: mdxページに目次をつける
+description:
+publishedAt: 2023-10-16
+updatedAt:
+---
+
+## page.tsxにmdx.defaultを使った書き方をした
+```
+  const headers = createNestedHeadings(
+    mdx
+      .default()
+      .props.children.filter((v: any) => v.type?.name?.search(/^h\d+/) === 0)
+      .map((v: any) => {
+        return {
+          title: v.props.children,
+          id: v.props.id,
+          name: v.type?.name,
+        };
+      }),
+    2
+  );
+```
+
+### npm run build時にmdx.defaultが存在しないためうまく行かない
+下記のようになってしまう。**未解決**
+```
+{ frontmatter: [Getter] }
+```
+
+
+## remark-mdx-frontmatterの中身を借りてきて自前で実装
+
+### IDの付与
+rehype-slugを使う。
+
+### 肝の部分
+headersを自前で作って渡してあげる。
+```
+valueToEstree({
+  data,
+  headers,
+})
+```
+ただし、rehype-slugでつけているIDと一部違うため、合わせる実装が必要。**未解決**
+createNestedHeadingsを使った階層構造が保たれていない部分の修正が必要。
+
+### 全体
+```
+import nextMDX from '@next/mdx';
+import nextPWA from '@ducanh2912/next-pwa';
+import remarkFrontmatter from 'remark-frontmatter';
+import { name as isIdentifierName } from 'estree-util-is-identifier-name';
+import rehypeSlug from 'rehype-slug';
+import { valueToEstree } from 'estree-util-value-to-estree';
+import toml from 'toml';
+import yaml from 'yaml';
+
+/** @type {import('next').NextConfig} */
+const withMDX = nextMDX({
+  extension: /\.mdx$/,
+  options: {
+    remarkPlugins: [
+      remarkFrontmatter,
+      ({ name = 'frontmatter', parsers } = {}) => {
+        if (!isIdentifierName(name)) {
+          throw new Error(
+            `Name this should be a valid identifier, got: ${JSON.stringify(
+              name
+            )}`
+          );
+        }
+        const allParsers = {
+          yaml: yaml.parse,
+          toml: toml.parse,
+          ...parsers,
+        };
+        return (ast) => {
+          let data;
+          const headers = ast.children
+            .filter((child) => child.type === 'heading')
+            .map((v) => {
+              const text = v.children
+                .filter((v) => v.type === 'text')
+                .map((v) => v.value)
+                .join('');
+              return {
+                id: text,
+                title: text,
+                name: `h${v.depth}`,
+              };
+            });
+          const node = ast.children.find((child) =>
+            Object.hasOwn(allParsers, child.type)
+          );
+          if (node) {
+            const parser = allParsers[node.type];
+            const { value } = node;
+            data = parser(value);
+          }
+          ast.children.unshift({
+            type: 'mdxjsEsm',
+            value: '',
+            data: {
+              estree: {
+                type: 'Program',
+                sourceType: 'module',
+                body: [
+                  {
+                    type: 'ExportNamedDeclaration',
+                    specifiers: [],
+                    declaration: {
+                      type: 'VariableDeclaration',
+                      kind: 'const',
+                      declarations: [
+                        {
+                          type: 'VariableDeclarator',
+                          id: { type: 'Identifier', name },
+                          init: valueToEstree({
+                            data,
+                            headers,
+                          }),
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          });
+        };
+      },
+    ],
+    rehypePlugins: [rehypeSlug],
+  },
+});
+
+const withPWA = nextPWA({
+  dest: 'public',
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+});
+
+const options = (phase, { defaultConfig }) => {
+  const plugins = [withMDX, withPWA];
+  return plugins.reduce((acc, plugin) => plugin(acc), {
+    ...defaultConfig,
+    reactStrictMode: process.env.NODE_ENV === 'development' ? false : true,
+    pageExtensions: ['ts', 'tsx', 'mdx'],
+    experimental: {
+      // mdxRs: true,
+    },
+    images: {
+      unoptimized: true,
+      domains: ['images.microcms-assets.io'],
+    },
+    // output: 'export',
+  });
+};
+
+export default options;
+
+```
