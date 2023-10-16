@@ -43,9 +43,11 @@ valueToEstree({
 })
 ```
 ただし、rehype-slugでつけているIDと一部違うため、合わせる実装が必要。**未解決**
-createNestedHeadingsを使った階層構造が保たれていない部分の修正が必要。
 
 ### 全体
+createNestedHeadingsを中で持っているので、utilsで定義してるものとかぶっている。
+（commonjsとtypescriptの違いがあるため、シンプルな方法があればリファクタリング検討）
+
 ```
 import nextMDX from '@next/mdx';
 import nextPWA from '@ducanh2912/next-pwa';
@@ -55,6 +57,40 @@ import rehypeSlug from 'rehype-slug';
 import { valueToEstree } from 'estree-util-value-to-estree';
 import toml from 'toml';
 import yaml from 'yaml';
+
+const createNestedHeadings = (
+  headings,
+  currentLabel,
+  tableOfContentsItems,
+  isBreak
+) => {
+  const items = tableOfContentsItems || [];
+  for (let i = 0; i < headings.length; i++) {
+    const heading = headings[i];
+    const label = parseInt(heading.name.replace('h', ''));
+    const nextElement = headings[i + 1];
+    const nextLabel =
+      nextElement && parseInt(nextElement.name.replace('h', ''));
+    const item = { ...heading };
+    if (nextLabel > currentLabel) {
+      item.items = createNestedHeadings(
+        headings.slice(i + 1),
+        nextLabel,
+        item.items,
+        true
+      );
+    }
+    if (label > currentLabel) {
+      continue;
+    }
+    if (isBreak && label < currentLabel) {
+      break;
+    }
+    items.push(item);
+  }
+
+  return items;
+};
 
 /** @type {import('next').NextConfig} */
 const withMDX = nextMDX({
@@ -118,7 +154,7 @@ const withMDX = nextMDX({
                           id: { type: 'Identifier', name },
                           init: valueToEstree({
                             data,
-                            headers,
+                            headers: createNestedHeadings(headers, 2),
                           }),
                         },
                       ],
@@ -162,5 +198,6 @@ const options = (phase, { defaultConfig }) => {
 };
 
 export default options;
+
 
 ```
