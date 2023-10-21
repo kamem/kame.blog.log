@@ -35,9 +35,7 @@ export const highlightToc = ({
   };
 
   const observerCallback: IntersectionObserverCallback = (entries) => {
-    const entry = entries.find(
-      (entry: { isIntersecting: any }) => entry.isIntersecting
-    );
+    const entry = entries.find((entry) => entry.isIntersecting);
     const target = entry?.target;
     if (target) {
       const index = anchorsArray.indexOf(target as HTMLElement);
