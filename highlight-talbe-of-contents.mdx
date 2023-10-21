@@ -1,0 +1,122 @@
+---
+title: 目次のスクロールによるハイライト機能
+description:
+publishedAt: 2023-10-21
+updatedAt:
+---
+
+## IntersectionObserverを利用して、クラスを付与する実装
+
+```
+type Props = {
+  headingElements: NodeListOf<Element>;
+  tocAnchorElements: NodeListOf<Element>;
+  options?: IntersectionObserverInit;
+  activeClassName?: string;
+};
+
+export const highlightToc = ({
+  headingElements,
+  tocAnchorElements,
+  options = {
+    root: null,
+    rootMargin: '0% 0px -80% 0px',
+    threshold: 1,
+  },
+  activeClassName = 'active',
+}: Props) => {
+  const anchorsArray = Array.from(headingElements);
+  const tocAnchorsArray = Array.from(tocAnchorElements);
+
+  const addActiveClass = (item: Element, activeNumber: number, i: number) => {
+    i === activeNumber
+      ? item.classList.add(activeClassName)
+      : item.classList.remove(activeClassName);
+  };
+
+  const observerCallback: IntersectionObserverCallback = (entries) => {
+    const entry = entries.find(
+      (entry: { isIntersecting: any }) => entry.isIntersecting
+    );
+    const target = entry?.target;
+    if (target) {
+      const index = anchorsArray.indexOf(target as HTMLElement);
+      anchorsArray.forEach((item, i) => addActiveClass(item, index, i));
+      tocAnchorsArray.forEach((item, i) => addActiveClass(item, index, i));
+    }
+  };
+
+  return new IntersectionObserver(observerCallback, options);
+};
+
+```
+
+## 目次コンポーネントの実装
+`use client`を使用してReactの実装外で取得した要素を渡してクラスを付与するようにしています。
+
+
+```
+'use client';
+import React, { forwardRef } from 'react';
+import styles from './TableOfContentsContainer.module.css';
+import { highlightToc } from '@/utils/highlightToc/highlightToc';
+
+type Props = {
+  title?: string;
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  isHighlighted?: boolean;
+  children?: React.ReactNode;
+};
+
+export const TableOfContentsContainer = forwardRef<HTMLDivElement, Props>(
+  function TableOfContentsContainer(
+    { title, level, isHighlighted, children, ...rest }: Props,
+    ref
+  ) {
+    React.useEffect(() => {
+      if (isHighlighted) {
+        const headingElements = document.querySelectorAll(
+          '[class^=EntryBody] h2[id],h3[id],h4[id],h5[id],h6[id]'
+        );
+        const tocAnchorElements = document.querySelectorAll(
+          `[class^=GlobalArea_side] .${styles.tableOfContentsContainer} a[href^="#"]`
+        );
+        const observer = highlightToc({
+          headingElements,
+          tocAnchorElements,
+        });
+
+        headingElements.forEach((item: Element) => {
+          observer.observe(item);
+        });
+
+        return () => {
+          observer.disconnect();
+        };
+      }
+    }, [isHighlighted]);
+
+    const Heading = `h${level || 2}`;
+    return React.createElement(
+      title ? 'section' : 'div',
+      { className: styles.tableOfContentsContainer, ref },
+
+      <>
+        {title &&
+          React.createElement(
+            Heading,
+            {
+              className: [styles.title].filter(Boolean).join(' '),
+            },
+            title
+          )}
+        {children}
+      </>
+    );
+  }
+);
+
+```
+
+## 問題点
+- headingElementsが存在しない場合は、クラスの付与がされない可能性がある
