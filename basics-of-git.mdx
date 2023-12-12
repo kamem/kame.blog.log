@@ -1,0 +1,109 @@
+---
+title: Gitについて、基本的な使い方
+description:
+publishedAt: 2023-10-21
+updatedAt:
+---
+
+## rebase周り
+### Git のブランチを別のブランチへ付け替える (--onto)
+https://zenn.dev/hankei6km/articles/git-rebase-onto
+
+
+### 【Git】git rebase を中断して元にもどす方法！ | あきぞらてっく
+https://akizora.tech/git-rebase-3684
+
+## コメント変更
+### 直前の Git コミット メッセージを変更する
+```bash
+git commit --amend
+
+git commit --amend -m "an updated commit message"
+```
+### git amend | Atlassian Git Tutorial
+https://www.atlassian.com/ja/git/tutorials/rewriting-history
+
+## Git Log周り
+### git log よく使うオプションまとめ #Git - Qiita
+https://qiita.com/take4s5i/items/15d8648405f4e7ea3039
+
+### git logのオプションと綺麗にツリー表示するためのエイリアス #Git - Qiita
+https://qiita.com/kawasaki_dev/items/41afaafe477b877b5b73
+
+## Git Log のalias設定
+
+```bash
+[alias]
+    graph = log --graph --date=short --pretty=\"format:%C(yellow)%h %C(cyan)%ad %C(green)%an%Creset%x09%s %C(red)%d%Creset\"
+    oneline = log --oneline  --no-merges --date=short --pretty=\"format:%C(yellow)%h %C(cyan)%ad %C(green)%an%Creset%x09%s %C(red)%d%Creset\"
+```
+
+### git log よく使うオプションまとめ
+
+オプション|説明|
+---|---|
+-p|各コミットのdiffを表示する|
+--word-diff|単語単位でdiffを表示する|
+--stat|各コミットで変更されたファイルの統計情報を表示する|
+--shortstat|--stat コマンドのうち、変更/追加/削除 の行だけを表示する|
+--name-only|コミット情報の後に変更されたファイルの一覧を表示する|
+--name-status|変更されたファイルと 追加/修正/削除 情報を表示する|
+--abbrev-commit|ハッシュの全体 (40文字) ではなく最初の数文字のみを表示する|
+--relative-date|完全な日付フォーマットではなく、相対フォーマット (“2 weeks ago” など) で日付を表示する|
+--pretty|コミットを別のフォーマットで表示する。オプションとして oneline, short, full, fuller そして format (独自フォーマットを設定する) を指定可能|
+--oneline|--pretty=oneline --abbrev-commitと同じ意味の便利なオプション|
+--graph|ブランチやマージの歴史を、ログ出力とともにアスキーグラフで表示する|
+--no-merges|マージコミットを表示しない|
+--author='kamem'|指定したユーザーのコミットのみ表示する|
+
+## これも安全なGitコマンドの1つです。ブランチのお掃除に使います。
+
+```bash
+git remote prune origin
+```
+
+## Git 検索コマンド
+
+### 基本的なテキスト検索
+```bash
+git grep '検索文字列'
+```
+
+### 特定のブランチで検索
+```bash
+git grep '検索文字列' <ブランチ名>
+```
+
+### 複数のパターンで検索
+```bash
+git grep -e 'パターン1' --and -e 'パターン2'
+```
+
+### ファイルタイプ毎に検索
+```bash
+git grep '検索文字列' -- *.md
+```
+
+### 行番号を表示
+```bash
+git grep -n '検索文字列'
+```
+
+##  ローカルで変更したファイルを無視する
+```
+git update-index --skip-worktree <path>
+```
+
+### 無視したファイルを確認する
+```
+git ls-files -v | grep ^S
+```
+
+### 無視したファイルを元に戻す
+```
+git update-index --no-skip-worktree <path>
+``` 
+
+## 参考
+### Gitをもっと使いこなそう！ ちょっと上級な便利コマンド32選 | 株式会社LIG(リグ)｜DX支援・システム開発・Web制作
+https://liginc.co.jp/387757
