@@ -1,0 +1,54 @@
+---
+title: このサイトについて
+description:
+publishedAt: 2024-01-16
+updatedAt:
+---
+import { microcmsData } from '@/constants/microcms';
+import { Categories } from '@/components/ui/Category';
+import { Tags } from '@/components/ui/Tag';
+import Script from 'next/script';
+
+フロントエンドエンジニア管理人の興味があることをまとめているブログ
+
+- [使用している技術と実装したい機能](/log/technology-used)
+
+## Storybook
+
+このサイトは、Storybookを使ってコンポーネントを管理しています。  
+[storybook.kame.blog](https://storybook.kame.blog/)
+
+## カテゴリー
+
+<Categories categories={microcmsData.categories.contents} />
+
+### webのこと
+技術的な興味があることをフロントエンド視点で書いています。
+### イラスト
+たまに趣味で描きます。[LINEスタンプ「アブブ」作りました。このキャラクターはいったい..](/entry/line_stamp_abubu/)
+### Youtube
+興味ある動画とかも紹介していきます。スプラトゥーンとか。
+### お金
+お金について、フリーランス視点で役に立つことをかいていきます。
+いままであまりお金についてあまり関心を持っていませんでした。。が、
+最近いろいろと調べてもっと早く知っておけばよかったなーっなんてこともありました。
+これからフリーランスを初める人に初めにしっておくといい知識などを書いていきます。
+### 3D
+一時期ハマっていたけれど、最近はあまりできていないです時間が出来次第ゲーム制作と同時に開始したい。
+<Script src="https://platform.twitter.com/widgets.js" />
+<blockquote className="twitter-tweet">
+  動くとめっちゃ可愛く思えてきた
+  <a href="https://t.co/vBYYWeInmf">pic.twitter.com/vBYYWeInmf</a>&mdash; kame (@kamem)
+  <a href="https://twitter.com/kamem/status/1267486323629125632?ref_src=twsrc%5Etfw">
+    June 1, 2020
+  </a>
+</blockquote>
+### 買い物情報
+ふるさと納税や、日々の買い物で買ってよかったものなどを紹介。
+
+{/* ![アブブのイラスト画像](https://images.microcms-assets.io/assets/8d63ea55db89496cbf00ccb8c6bf8880/42dd4e4c781a49838accf7536d750c69/line_stamp_abubu.png) */}
+
+## タグ
+<Tags items={microcmsData.tags.contents} />
+
+[お問い合わせはこちらから](https://contact.iz0.org/)
