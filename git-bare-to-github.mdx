@@ -1,0 +1,85 @@
+---
+title: git init --bare --shared の意味と GitHub への移行手順
+description:
+publishedAt: 2025-05-25
+updatedAt:
+---
+
+## 🧰 `git init --bare` とは？
+
+```bash
+git init --bare
+```
+
+- 作業ツリー（ファイル群）が存在しない Git リポジトリを作成
+- push/pull専用の「中央サーバー用リポジトリ」として使用
+- `.git` フォルダだけがルートに存在する形
+
+## 🧑‍🤝‍🧑 `--shared` オプションとは？
+
+```bash
+git init --bare --shared=group
+```
+
+- 複数人が同じリポジトリを使うことを想定し、パーミッションを自動調整
+- `--shared=group` で、同じUNIXグループのユーザーに書き込み権限を付与
+- `core.sharedRepository=group` が config に設定される
+
+---
+
+# 🚀 ローカル裸リポジトリを GitHub へ移行する手順
+
+## ① GitHubで空のリポジトリを作成
+
+例）`https://github.com/masatoshi/myproject.git`  
+※READMEや.gitignoreなどは追加しない（空の状態）
+
+---
+
+## ② ローカル裸リポジトリに GitHub を登録
+
+```bash
+cd ~/repos/myproject.git  # 裸リポジトリへ移動
+git remote add origin git@github.com:masatoshi/myproject.git
+```
+
+---
+
+## ③ GitHub へ全てのrefを一括 push
+
+```bash
+git push --mirror origin
+```
+
+- `--mirror` を使うことで、すべてのブランチ・タグ・設定を GitHub に反映
+- `--all` や `--tags` よりも完全に同期される
+
+---
+
+## ④ GitHub に移行完了！
+
+今後は通常通り clone/pull/push で運用可能：
+
+```bash
+git clone git@github.com:masatoshi/myproject.git
+```
+
+---
+
+## 🧹 任意：ローカル裸リポジトリの削除
+
+```bash
+rm -rf ~/repos/myproject.git
+```
+
+---
+
+## 🔎 補足
+
+| オプション       | 説明                                      |
+| ---------------- | ----------------------------------------- |
+| `--bare`         | 作業ツリーなしの中央リポジトリ            |
+| `--shared=group` | UNIXグループ共有用パーミッション設定      |
+| `--mirror`       | すべてのrefs（ブランチ・タグなど）を push |
+
+GitHubへ移行すれば、Pull Request や GitHub Actions の活用も可能になります ✅
